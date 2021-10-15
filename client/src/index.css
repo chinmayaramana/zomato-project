@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+    scroll-behavior: smooth;
+    
+    
+}
+.slick-prev:before,
+.slick-next:before {
+  color: #e23744;
+}
+::-webkit-scrollbar{
+  width: 0;
+}
+.leaflet-container{
+  width: inherit !important;
+  height: inherit !important;
+}

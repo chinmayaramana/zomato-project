@@ -1,44 +1,63 @@
-// Importing Env Variables
+//IMPORTS
 require("dotenv").config();
-
-// Libraries
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import passport from "passport";
 
-// configs
-import googleAuthConfig from "./config/google.config";
+//DATABASE
+import ConnectDB from "./Database/connection.js";
 
-// microservice routes
-import Auth from "./API/Auth";
+//API'S
+import Auth from "./API/Auth/index";
+import Restaurant from "./API/Restaurant/index";
+import Food from "./API/Food/index";
+import Image from "./API/Images/index";
+import Order from "./API/Orders/index";
+import Review from "./API/Reviews/index";
+import User from "./API/User/index";
+import Pay from "./API/Payment/index"
+import Menu from "./API/Menu/index";
 
+//------------------CONFIGS--------------
+import googleConfig from "./Config/google.config";
+import routeConfig from "./Config/route.config";
 
-// Database connection
-import ConnectDB from "./database/connection";
+googleConfig(passport);
+routeConfig(passport);
 
+//MIDDLEWARES
 const zomato = express();
-
-// application middlewares
 zomato.use(express.json());
 zomato.use(express.urlencoded({ extended: false }));
-zomato.use(helmet());
 zomato.use(cors());
+zomato.use(helmet());
+zomato.use(passport.initialize());
+zomato.use(passport.session());
 
-// passport cofiguration
-googleAuthConfig(passport);
-
-// Application Routes
+//MICROSERVICES
 zomato.use("/auth", Auth);
+zomato.use("/restaurant", Restaurant);
+zomato.use("/foods", Food);
+zomato.use("/images", Image);
+zomato.use("/orders", Order);
+zomato.use("/reviews", Review);
+zomato.use("/user", User);
+zomato.use("/menu", Menu);
+zomato.use("/payments", Pay);
 
-zomato.get("/", (req, res) => res.json({ message: "Setup success" }));
+//ROUTES
+zomato.get("/", (req, res) => {
+  res.json({ message: "success" });
+});
 
-const port = process.env.PORT || 4000;
-
+//------------------------PORT------------------
 zomato.listen(4000, () =>
   ConnectDB()
-    .then(() => console.log("Server is running 🚀"))
-    .catch(() =>
-      console.log("Server is running, but database connection failed... ")
-    )
+    .then(() => {
+      console.log("🚀");
+    })
+    .catch(() => {
+      console.log("✅", error);
+    })
 );

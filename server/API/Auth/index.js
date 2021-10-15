@@ -1,65 +1,66 @@
-// Library
+//Library Imports
 import express from "express";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import passport from "passport";
 
-// Models
-import { UserModel } from "../../database/user";
 
-// validation
+//Model Imports
+import { UserModel } from "../../Database/allModels";
 
+//config
+const router = express.Router();
 
-const Router = express.Router();
+//validate
+import { ValidateSignUp, ValidateSignIn } from "../../Validation/auth";
 
 /*
-Route     /signup
-Des       Register new user
-Params    none
-Access    Public
-Method    POST  
+Route       /signup
+Des         Register with credetials
+Params      none
+Acess       Public
+Method      Post
 */
-Router.post("/signup", async (req, res) => {
-  try {
-    await ValidateSignup(req.body.credentials);
 
-    await UserModel.findByEmailAndPhone(req.body.credentials);
+router.post("/signup", async (req, res) => {
+  const { error } = await ValidateSignUp(req.body.credentials);
+  if (error) return res.status(500).json({ validate: error });
+
+  try {
+    await UserModel.findByEmailAndPhoneNumber(req.body.credentials);
     const newUser = await UserModel.create(req.body.credentials);
     const token = newUser.generateJwtToken();
-    return res.status(200).json({ token, status: "success" });
+    res.status(200).json({ token, status: "Successful" });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error:error.message });
   }
 });
-
 /*
-Route     /signin
-Des       Signin with email and password
-Params    none
-Access    Public
-Method    POST  
+Route       /signip
+Des         Sign Ip with email and password
+Params      none
+Acess       Public
+Method      Post
 */
-Router.post("/signin", async (req, res) => {
+router.post("/signin", async (req, res) => {
+  const { error } = await ValidateSignIn(req.body.credentials);
+  if (error) return res.status(500).json({ validate: error });
   try {
-    await ValidateSignin(req.body.credentials);
-
+    await ValidateSignIn(req.body.credentials);
     const user = await UserModel.findByEmailAndPassword(req.body.credentials);
-
     const token = user.generateJwtToken();
-    return res.status(200).json({ token, status: "success" });
+    res.status(200).json({ token, status: "Successful" });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
 });
 
 /*
-Route     /google
-Des       Google Signin
-Params    none
-Access    Public
-Method    GET  
+Route       /google
+Des         google sign in
+Params      none
+Acess       Public
+Method      Get
 */
-Router.get(
+router.get(
   "/google",
   passport.authenticate("google", {
     scope: [
@@ -70,20 +71,17 @@ Router.get(
 );
 
 /*
-Route     /google/callback
-Des       Google Signin Callback
-Params    none
-Access    Public
-Method    GET  
+Route       /google/callback
+Des         google sign callback
+Params      none
+Acess       Public
+Method      Get
 */
-Router.get(
+router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    return res.redirect(
-      `http://localhost:3000/google/${req.session.passport.user.token}`
-    );
+    res.redirect(`http://localhost:3000/google/${req.session.passport.user.token}`);
   }
 );
-
-export default Router;
+export default router;

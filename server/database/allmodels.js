@@ -1,17 +1,17 @@
-import { FoodModel } from "./food";
-import { ImageModel } from "./image";
-import { MenuModel } from "./menu";
-import { OrderModel } from "./order";
-import { RestaurantModel } from "./restaurant";
-import { ReviewModel } from "./reviews";
-import { UserModel } from "./user";
+import { FoodModel } from "./Food/index";
+import { ImageModel } from "./Image/index";
+import { MenuModel } from "./Menu/index";
+import { OrdersModel } from "./Order/index";
+import { RestaurantModel } from "./Restaurant/index";
+import { ReviewsModel } from "./Reviews/index";
+import { UserModel } from "./User/index";
 
 export {
   FoodModel,
   ImageModel,
   MenuModel,
-  OrderModel,
+  OrdersModel,
   RestaurantModel,
-  ReviewModel,
+  ReviewsModel,
   UserModel,
 };

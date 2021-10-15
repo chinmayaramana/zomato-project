@@ -1,0 +1,33 @@
+sudo: required
+
+services:
+  - docker
+script:
+  - echo "Hello Students!"
+
+
+after_success : 
+
+  - docker build -t akanaspro/zomato-master-client ./client
+  - docker build -t akanaspro/zomato-master-server ./server
+  - docker build -t akanaspro/zomato-master-nginx ./nginx
+
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  - docker push akanaspro/zomato-master-client
+  - docker push akanaspro/zomato-master-server
+  - docker push akanaspro/zomato-master-nginx
+
+deploy : 
+
+  provider : elasticbeanstalk
+  region : ap-south-1
+  app: ZomatoClone
+  env: Zomatoclone-env
+  bucket_name: elasticbeanstalk-ap-south-1-724914261313
+  bucket_path: zomato-clone
+  on:
+    branch: master
+  access_key_id: $AWS_KEY
+  secret_access_key: $AWS_SECRET
+

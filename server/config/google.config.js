@@ -1,9 +1,5 @@
 import googleOAuth from "passport-google-oauth20";
-import dotenv from "dotenv";
-dotenv.config({
-  path: require("path").resolve(__dirname, "../.env"),
-});
-import { UserModel } from "../database/allModels";
+import { UserModel } from "../Database/allModels";
 
 const GoogleStrategy = googleOAuth.Strategy;
 
@@ -11,32 +7,29 @@ export default (passport) => {
   passport.use(
     new GoogleStrategy(
       {
-        clientID:
-          "191427905174-fftr5c5cm5ve0el6rcfi65k8mpcu7oud.apps.googleusercontent.com",
-        clientSecret: "tn_GVfhNNVPspzhGjTeH2EZE",
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: "http://localhost:4000/auth/google/callback",
       },
       async (accessToken, refreshToken, profile, done) => {
-        // creating a new user object
+        //   creating user object
         const newUser = {
           fullname: profile.displayName,
           email: profile.emails[0].value,
           profilePic: profile.photos[0].value,
-        };
+        };                                                                                            
+        // check if user exist
         try {
-          // check if the user exist
           const user = await UserModel.findOne({ email: newUser.email });
+          // genearet token
 
           if (user) {
-            // generate token
             const token = user.generateJwtToken();
-            // return user
+            //   retun user
             done(null, { user, token });
           } else {
-            // create new user
+            //   crete new user
             const user = await UserModel.create(newUser);
-
-            // generate token
             const token = user.generateJwtToken();
             // return user
             done(null, { user, token });
@@ -49,5 +42,5 @@ export default (passport) => {
   );
 
   passport.serializeUser((userData, done) => done(null, { ...userData }));
-  passport.deserializeUser((id, done) => done(null, id));
+  passport.deserializeUser((userData, done) => done(null, id));
 };

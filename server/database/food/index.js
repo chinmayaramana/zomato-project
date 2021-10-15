@@ -1,6 +1,6 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
-const FoodSchema = new mongoose.Schema(
+const FoodSchema = mongoose.Schema(
   {
     name: { type: String, required: true },
     descript: { type: String, required: true },
@@ -18,17 +18,19 @@ const FoodSchema = new mongoose.Schema(
         ref: "Foods",
       },
     ],
-    restaurant: {
+    restaurants: {
       type: mongoose.Types.ObjectId,
-      ref: "Restaurants",
+      ref: "Restaurant",
       required: true,
     },
-   
-},
-{
+    reviews: {
+      type: mongoose.Types.ObjectId,
+      ref: "Reviews",
+    },
+  },
+  {
     timestamps: true,
-}
-  
+  }
 );
 
 export const FoodModel = mongoose.model("Foods", FoodSchema);

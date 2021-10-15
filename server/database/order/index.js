@@ -8,25 +8,41 @@ const OrderSchema = new mongoose.Schema(
     },
     orderDetails: [
       {
-        food: { type: mongoose.Types.ObjectId, ref: "Foods" },
-        quantity: { type: Number, required: true },
-        paymode: { type: String, required: true },
-        status: { type: String, default: "Placed" },
+        food: {
+          type: mongoose.Types.ObjectId,
+          ref: "Users",
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+        paymode: {
+          type: String,
+        },
+        status: {
+          type: String,
+          default: "Placed",
+        },
         paymentDetails: {
-          itemTotal: { type: Number, required: true },
-          promo: { type: Number, required: true },
-          tax: { type: Number, required: true },
-        }, 
+          itemTotal: {
+            type: Number,
+            required: true,
+          },
+          promo: {
+            type: Number,
+            required: true,
+          },
+          tax: {
+            type: Number,
+            required: true,
+          },
+        },
       },
     ],
-    orderRatings: {
-        type: Number,
-        required: true,
-    },
-},
-{
+  },
+  {
     timestamps: true,
-}
- );
+  }
+);
 
- export const OrderModel = mongoose.model("Orders", OrderSchema);
+export const OrdersModel = mongoose.model("Orders", OrderSchema);

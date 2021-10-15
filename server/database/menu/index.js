@@ -11,19 +11,19 @@ const MenuSchema = new mongoose.Schema(
             ref: "Foods",
           },
         ],
+        recommended: [
+          {
+            type: mongoose.Types.ObjectId,
+            ref: "Foods",
+            unique: true,
+          },
+        ],
       },
     ],
-    recommended: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: "Foods",
-        unique: true,
-      },
-    ],
-},
-{
+  },
+  {
     timestamps: true,
-}
+  }
 );
 
 export const MenuModel = mongoose.model("Menu", MenuSchema);

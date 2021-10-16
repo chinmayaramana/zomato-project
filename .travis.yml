@@ -22,9 +22,9 @@ deploy :
 
   provider : elasticbeanstalk
   region : ap-south-1
-  app: ZomatoClone
-  env: Zomatoclone-env
-  bucket_name: elasticbeanstalk-ap-south-1-724914261313
+  app: zomato-master
+  env: Zomatomaster-env
+  bucket_name: elasticbeanstalk-us-east-2-826385745603
   bucket_path: zomato-clone
   on:
     branch: master
